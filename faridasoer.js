@@ -1,39 +1,73 @@
-class ListNode {
-  constructor(val, next = null) {
-    
-    this.val = val;
-    this.next = next;
-  }
+const timeEl = document.getElementById("countdown-timer");
+const word = document.getElementById("spellCheck");
+const scoreEl = document.getElementById("scoreBoard");
+//const remains constant throughout, let can be updated
+let time = 11;
+let score = 0;
+scoreEl.innerHTML = score;
+const words = ['sigh',
+'tense',
+'airplane',
+'ball',
+'pies',
+'juice',
+'warlike',
+'bad',
+'north',
+'dependent',
+'steer',
+'silver',
+'highfalutin',
+'superficial',
+'quince',
+'eight',
+'feeble',
+'admit',
+'drag',
+'loving'
+];
+
+function getRandomElement () {
+    return words[Math.floor(Math.random() * words.length)];
 }
 
-const linkedList = [5, 4, 3, 2, 1].reduce((acc, val) => new ListNode(val, acc), null);
-
-
-const printList = (head) => {
-  if(!head) {
-    return;
-  }
-
-  console.log(head.val);
-  printList(head.next);
+function addWordToH3 () {
+    document.getElementById("word").innerHTML = getRandomElement();
 }
 
-// --------- solution -----------
+var countdown = setInterval(updateTime,1000);
 
-var reverseList = function(head) {
-  let prev = null;
-  let current = head;
-  
-  while(current) {
-    let nextTemp = current.next;
-    current.next = prev;
-    prev = current;
-    current = nextTemp;
-  }
-  
-  return prev;
-};
+function updateTime () {
+    time--;
+    timeEl.innerHTML = time;
 
-printList(linkedList);
-console.log('after reverse')
-printList(reverseList(linkedList))
+    if(time == 0)
+    {
+        clearInterval(countdown);
+        document.getElementById("spellCheck").disabled = true;
+        document.getElementById("word").innerHTML = "TIME UP!";
+    }
+}
+
+addWordToH3();
+
+function updateTime2() {
+    time += 2;
+    timeEl.innerHTML = time;
+}
+
+function updateScore () {
+    score += 1;
+    scoreEl.innerHTML = score;
+}
+//the main happening, here we add an event listener with an input to check out for any changes in the input text field. We pass element to the function so as we can target the input text field
+word.addEventListener('input',function(element) {
+    const submission = element.target.value;
+    if(submission === document.getElementById("word").innerHTML) {
+        updateTime2();
+        addWordToH3();
+        // to clear the input area after word entered is correct
+        element.target.value = "";
+        updateScore();
+    }
+});
